@@ -2,23 +2,23 @@
 
 ## Table of Contents
 
-- [Overview](https://github.com/Eli-Rousseau/ChaningFilesDates#overview)
+- [Overview](https://github.com/Eli-Rousseau/ChaningFileDates#overview)
   
-- [Prerequisites](https://github.com/Eli-Rousseau/ChaningFilesDates#prerequisites)
+- [Prerequisites](https://github.com/Eli-Rousseau/ChaningFileDates#prerequisites)
   
-- [Descriptions](https://github.com/Eli-Rousseau/ChaningFilesDates#descriptions)
+- [Descriptions](https://github.com/Eli-Rousseau/ChaningFileDates#descriptions)
   
-  - [ObtainFileList.ps1](https://github.com/Eli-Rousseau/ChaningFilesDates#obtainfilelistps1)
+  - [ObtainFileList.ps1](https://github.com/Eli-Rousseau/ChaningFileDates#obtainfilelistps1)
     
-  - [ChangeFileDateScript.py](https://github.com/Eli-Rousseau/ChaningFilesDates#changefiledatescriptpy)
+  - [ChangeFileDateScript.py](https://github.com/Eli-Rousseau/ChaningFileDates#changefiledatescriptpy)
     
-- [Usage](https://github.com/Eli-Rousseau/ChaningFilesDates#usage)
+- [Usage](https://github.com/Eli-Rousseau/ChaningFileDates#usage)
   
-- [Output](https://github.com/Eli-Rousseau/ChaningFilesDates#output)
+- [Output](https://github.com/Eli-Rousseau/ChaningFileDates#output)
   
-- [Contributing](https://github.com/Eli-Rousseau/ChaningFilesDates#contributing)
+- [Contributing](https://github.com/Eli-Rousseau/ChaningFileDates#contributing)
   
-- [License](https://github.com/Eli-Rousseau/ChaningFilesDates#license)
+- [License](https://github.com/Eli-Rousseau/ChaningFileDates#license)
   
 
 ## Overview
