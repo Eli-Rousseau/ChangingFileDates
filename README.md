@@ -6,7 +6,7 @@
   
 - [Prerequisites](https://github.com/Eli-Rousseau/ChangingFileDates#prerequisites)
   
-- [Descriptions](https://github.com/Eli-Rousseau/ChangingFileDates#descriptions)
+- [Description](https://github.com/Eli-Rousseau/ChangingFileDates#description)
   
   - [ObtainFileList.ps1](https://github.com/Eli-Rousseau/ChangingFileDates#obtainfilelistps1)
     
