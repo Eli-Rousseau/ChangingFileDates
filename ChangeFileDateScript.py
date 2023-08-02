@@ -13,167 +13,205 @@ def importFiles():
     # List storing the fully qualified paths to each file
     flist = []
 
-    # Read-in the file 'MyFiles.txt' from the current directory
-    with open('MyFiles.txt', 'r', encoding='utf-16') as file:
+    # Read-in the input file from the current directory
+    with open('MyFiles.txt', 'r', encoding='utf-16') as myfiles:
 
-        for f in file.readlines():
-            f = formatFilePath(f[:-1]) # Formatting the path of a single file
-            flist.append(f)
+        # Properly format each file path in turn
+        for file in myfiles.readlines():
 
-    file.close()
+            # Removes the redundant part in the beginning of the file path
+            file = 'C:' + file[:-1].split('C:')[1]
+            
+            # Changing the '\' into '/' character
+            file = file.split('\\')
+            file = '/'.join(file)
+
+            # Adding the formatted path to the new list
+            flist.append(file)
+
+    # Closing the input file
+    myfiles.close()
 
     # Returns the list with the fully qualified paths to each file
     return flist
 
 
-# Function that well format the file path correctly
-def formatFilePath(file):
+# Class to represent the file object
+class fileObject:
 
-    # Removes the redundant part in the beginning of the file path
-    file = 'C:' + file.split('C:')[1]
+    # Method that will initialize the object attributes
+    def __init__(self, file):
+         
+         # Define the file attribute
+         self.file = file
 
-    # Changing the '\' into '/' character
-    file = file.split('\\')
-    file = '/'.join(file)
+    # Method that will derive the creation date of the file
+    def findCreationDate(self):
 
-    # Returns the correctly formatted file path
-    return file
+        # Finds the current time in %H:%M:%S format
+        timepart = time.localtime()
+        timepart = time.strftime('%H:%M:%S', timepart)
 
+        # Finds the date from the file path name in %Y%m%d format 
+        datepart = re.search('\d{8}', self.file)
 
-# Function that will derive the creation date from the formatted file paths
-def findCreationDate(file):
+        # Verifies that the correct pattern was recovered
+        if datepart != None: 
 
-    # Finds the current time in %H:%M:%S format
-    ctime = time.localtime()
-    ctime = time.strftime('%H:%M:%S', ctime)
+            datepart = datepart.group()
+            datepart = datepart[:4] + '-' + datepart[4:6] + '-' + datepart[6:8]
 
-    # Finds the date from the file path name in %Y%m%d format 
-    date = re.search('\d{8}', file)
+            # Combines the date and time as a single string
+            pattern = datepart + ' ' + timepart
 
-    # Verifies that the correct pattern was recovered
-    if date != None: 
+        # Otherwise, file that lack the correct pattern 
+        else:
 
-        date = date.group()
-        date = date[:4] + '-' + date[4:6] + '-' + date[6:8]
+            # Gets a None as the date and time value
+            pattern = None
 
-        # Combines the date and time as a single string
-        cdate = date + ' ' + ctime
-
-        # Converts the input string to a datetime object
-        dtobject = datetime.strptime(cdate, "%Y-%m-%d %H:%M:%S")
-
-        # Converts the datetime object to a Unix timestamp
-        timestamp = dtobject.timestamp()
-
-    # Files that lack the correct pattern 
-    else:
-
-        # Gets a None as timestamp value
-        timestamp = None
-
-    # Returns the file path together with its corresponding date and timestamp
-    return (file, timestamp)
-
-
-# Function that will check whether the timestamp of a file should be changed
-def checkFileCreateDate(file, timestamp):
-
-    # Finds the file properties derived creation date
-    prdate = time.ctime(os.path.getctime(file))
-    prdate = datetime.strptime(prdate, '%a %b %d %H:%M:%S %Y')
-    prdate = datetime.strftime(prdate, '%Y-%m-%d')
+        # Returns the expected file creation date
+        return pattern
     
-    # Convert timestamp to the file pattern derived creation date
-    cdate = datetime.utcfromtimestamp(timestamp)
-    cdate = cdate.strftime('%Y-%m-%d')
+    # Method that will check whether the file creation date should be changed
+    def checkFileCreateDate(self):
 
-    # If the two variables are equal
-    if prdate == cdate:
+        # Finds the latest file creation date setting
+        filedate = time.ctime(os.path.getctime(self.file))
+        filedate = datetime.strptime(filedate, '%a %b %d %H:%M:%S %Y')
+        filedate = datetime.strftime(filedate, '%Y-%m-%d')
 
-        # The file's timestamp should not be changed
-        return False
+        # Finds the pattern of the expected file creation date
+        pattern = self.findCreationDate()[0:10]
+
+        # If the two variables are equal
+        if filedate == pattern:
+
+            # The file creation date should not be changed
+            return False
     
-    # Else the variables are not equal
-    else:
+        # Else the variables are not equal
+        else:
 
-        # The file's timestamp should be changed
-        return True
+            # The file creation date should be changed
+            return True
+    
+    # Method that will convert the creation date of a file in a Unix timestamp
+    def convertTimestamp(self):
 
+        # Retrieve the date pattern of a file
+        pattern = self.findCreationDate()
 
-# Function will change the creation date of the input file to its corresponding timestamp
-def changeFileCreateDate(file, timestamp):
+        # Verifies that a file has a regular date pattern
+        if pattern != None:
 
-    # Opens file and get the handle of file
-    # API: http://timgolden.me.uk/pywin32-docs/win32file__CreateFile_meth.html
-    handle = win32file.CreateFile(file, win32file.GENERIC_WRITE, 0, None, win32file.OPEN_EXISTING, 0, 0)
+            # Converts the input string to a datetime object
+            dtobject = datetime.strptime(pattern, "%Y-%m-%d %H:%M:%S")
 
-    # Creates a PyTime object
-    # API: http://timgolden.me.uk/pywin32-docs/pywintypes__Time_meth.html
-    PyTime = pywintypes.Time(timestamp)
+            # Converts the datetime object to a Unix timestamp
+            timestamp = dtobject.timestamp()
 
-    # Resets the creation time of file
-    # API: http://timgolden.me.uk/pywin32-docs/win32file__SetFileTime_meth.html
-    win32file.SetFileTime(handle, PyTime)
+        # Otherwise, file that lack the correct pattern 
+        else:
+
+            # Gets a None as the timestamp
+            timestamp = None
+
+        # Returns the file timestamp
+        return timestamp
+    
+    # Method that will change the creation date of the input file
+    def changeFileCreateDate(self):
+
+        # Retrieve the date pattern of a file
+        timestamp = self.convertTimestamp()
+
+        # Verifies that a file has a regular date pattern
+        if timestamp != None:
+
+            # Opens file and get the handle of file
+            # API: http://timgolden.me.uk/pywin32-docs/win32file__CreateFile_meth.html
+            handle = win32file.CreateFile(self.file, win32file.GENERIC_WRITE, 0, None, win32file.OPEN_EXISTING, 0, 0)
+
+            # Creates a PyTime object
+            # API: http://timgolden.me.uk/pywin32-docs/pywintypes__Time_meth.html
+            PyTime = pywintypes.Time(timestamp)
+
+            # Resets the creation time of file
+            # API: http://timgolden.me.uk/pywin32-docs/win32file__SetFileTime_meth.html
+            win32file.SetFileTime(handle, PyTime)
+
+    # Method that will change the modification date of the input file
+    def changeFileModificationDate(self):
+
+        # Retrieve the date pattern of a file
+        timestamp = self.convertTimestamp()
+
+        # Verifies that a file has a regular date pattern
+        if timestamp != None:
+
+            # Resets the file modification date
+            os.utime(self.file, (os.path.getatime(self.file), timestamp))
 
 
 # Function that will display return the list of the non-changed files
-def nchangeFileList(nchfiles):
+def notchangedFileList(incfiles):
 
     # Define the output string
     output = 'Here you will find the files that did not match the expected date pattern:\n'
-    output += 'Total file(s): {}\n'.format(len(nchfiles))
+    output += 'Total file(s): {}\n'.format(len(incfiles))
 
     # Add each of the files to the output string
-    for f in nchfiles:
+    for file in incfiles:
 
-        output += f[0] + '\n'
+        output += file + '\n'
     
     # Write down the output string to the 'NotChangedFiles.txt' file
     with open('NotChangedFiles.txt', 'w') as file:
 
         file.write(output)
 
+    # Close the output file
     file.close()
 
 
-# Function that will change the modification date of the input file to its corresponding timestamp
-def changeFileModificationDate(file, timestamp):
-
-    # Resets the modification time of file
-    os.utime(file, (os.path.getatime(file), timestamp))
-
-
-# Import the list of file paths
-flist = importFiles()
-sys.stdout.write('A total of {} file(s) were recovered in the specified location.\n'.format(len(flist))) # Write text to the console
-
-# Determine the timestamp of each file
-dlist = [findCreationDate(f) for f in flist]
-
-# Grouping files with the correct date pattern
-cfiles = [f for f in dlist if f[1] != None] # Correct files
-sys.stdout.write('Of these, {} file(s) have the correct date pattern.\n'.format(len(cfiles))) # Write text to the console
-
-# Checking which files require changes
-mfiles = [f for f in cfiles if checkFileCreateDate(f[0], f[1])]
-sys.stdout.write('Finally, {} file(s) require a change in modification and creation date.\n'.format(len(mfiles))) # Write text to the console
-
-# Perform changes in the creation and modification dates of files
-if len(mfiles) != 0:
-
-    for f in mfiles:
-
-        changeFileCreateDate(f[0], f[1])
-        changeFileModificationDate(f[0], f[1])
-        sys.stdout.write('The files were successfully modified.\n') # Write text to the console
-
-# The files are already up to date and no changes have to be made
-else:
+# Function that floods the main stream of the script
+def main():
     
-    sys.stdout.write('All files were already correctly labelled.\n') # Write text to the console
+    # Import the list of file paths
+    flist = importFiles()
+    sys.stdout.write('A total of {} file(s) were recovered in the specified location.\n'.format(len(flist))) # Write text to the console
 
-# Grouping files without the correct date pattern
-incfiles = [f for f in dlist if f[1] == None] # Incorrect files
-nchangeFileList(incfiles)
-sys.stdout.write('Files that did not match the expected date pattern can be found in the log file:\n') # Write text to the console
-sys.stdout.write('"C:\\Users\\rouss\\Documents\\Programming Projects\\Python\\ChangingFileDates\\NotChangedFiles.txt"') # Write text to the console
+    # Grouping files with the correct date pattern
+    cfiles = [file for file in flist if fileObject(file).findCreationDate() != None]
+    sys.stdout.write('Of these, {} file(s) have the correct date pattern.\n'.format(len(cfiles))) # Write text to the console
+
+    # Checking which files require changes
+    mfiles = [file for file in cfiles if fileObject(file).checkFileCreateDate()]
+    sys.stdout.write('Finally, {} file(s) require a change in modification and creation date.\n'.format(len(mfiles))) # Write text to the console
+
+    # Perform changes in the creation and modification dates of files
+    if len(mfiles) != 0:
+
+        for file in mfiles:
+
+            fileObject(file).changeFileCreateDate()
+            fileObject(file).changeFileModificationDate()
+    
+        sys.stdout.write('The files were successfully modified.\n') # Write text to the console
+    
+    # The files are already up to date and no changes have to be made
+    else:
+        
+        sys.stdout.write('All files were already correctly labelled.\n') # Write text to the console
+    
+    # Grouping files without the correct date pattern
+    incfiles = [file for file in flist if fileObject(file).findCreationDate() == None] # Incorrect files
+    sys.stdout.write('Files that did not match the expected date pattern can be found in the log file:\n') # Write text to the console
+
+    # Writing down the non changed files to an output file
+    notchangedFileList(incfiles)
+    notchangedfiles = '"{}\\NotChangedFiles.txt"'.format(os.getcwd()) # Path to output file
+    sys.stdout.write(notchangedfiles) # Write text to the console
+
+main()
