@@ -20,7 +20,7 @@ def importFiles():
         for file in myfiles.readlines():
 
             # Removes the redundant part in the beginning of the file path
-            file = 'C:' + file[:-1].split('C:')[1]
+            file = file[:-1].split('::')[1][:3] + file[:-1].split(':\\')[1]
             
             # Changing the '\' into '/' character
             file = file.split('\\')
