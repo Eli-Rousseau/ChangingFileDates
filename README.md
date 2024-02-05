@@ -3,23 +3,20 @@
 ## Table of Contents
 
 - [Overview](https://github.com/Eli-Rousseau/ChangingFileDates#overview)
-  
+
 - [Prerequisites](https://github.com/Eli-Rousseau/ChangingFileDates#prerequisites)
-  
+
 - [Description](https://github.com/Eli-Rousseau/ChangingFileDates#description)
   
   - [ObtainFileList.ps1](https://github.com/Eli-Rousseau/ChangingFileDates#obtainfilelistps1)
-    
+  
   - [ChangeFileDateScript.py](https://github.com/Eli-Rousseau/ChangingFileDates#changefiledatescriptpy)
-    
+
 - [Usage](https://github.com/Eli-Rousseau/ChangingFileDates#usage)
-  
+
 - [Output](https://github.com/Eli-Rousseau/ChangingFileDates#output)
-  
+
 - [Contributing](https://github.com/Eli-Rousseau/ChangingFileDates#contributing)
-  
-- [License](https://github.com/Eli-Rousseau/ChangingFileDates#license)
-  
 
 ## Overview
 
@@ -86,8 +83,4 @@ After running the `ChangeFileDateScript.py` script, it will display information 
 
 ## Contributing
 
-Feel free to modify the content according to your preferences, and don't forget to add a license file (e.g., `LICENSE`) to your project if you haven't already.
-
-## License
-
-This project is licensed under the [MIT License](https://github.com/Eli-Rousseau/WSL/blob/master/LICENSE).
+Feel free to modify the content according to your preferences.

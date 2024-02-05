@@ -1,1 +1,9 @@
-Here you will find the files that do not match the expected data pattern and thus have not been changed.
+Here you will find the files that did not match the expected date pattern:
+Total file(s): 7
+D:/Documents/Personal Documentation/Categories.docx
+D:/Documents/Personal Documentation/Categorization Manual.txt
+D:/Documents/Personal Documentation/Housing and Property/Kot Ledeberg/Rental_Agreement _Kot_Ledeberg.docx
+D:/Documents/Personal Documentation/Housing and Property/Kot Ledeberg/Rental_Agreement _Kot_Ledeberg_2020-21.pdf
+D:/Documents/Personal Documentation/Housing and Property/Kot Ledeberg/Rental_Agreement _Kot_Ledeberg_2021-22.pdf
+D:/Documents/Personal Documentation/Housing and Property/Kot Ledeberg/Rental_Agreement _Kot_Ledeberg_2022-23.pdf
+D:/Documents/Personal Documentation/Housing and Property/Kot Ledeberg/Rental_Agreement _Kot_Ledeberg_2023-24.pdf
